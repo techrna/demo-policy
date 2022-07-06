@@ -12,8 +12,11 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { TablePagination } from '@mui/material';
+import { Button, TablePagination } from '@mui/material';
 import CollapsibleTable from './PolicyTable';
+import AddIcon from '@mui/icons-material/Add';
+
+import SaveIcon from '@mui/icons-material/Save';
 
 const skip_header = ["rule", "description", "remediation recipe", "value", "operator", "policy_group"]
 
@@ -32,15 +35,26 @@ function Row(props: { key_data: any, rows: any, cols: any }) {
             {mainopen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell >
-          {key_data}
+        <TableCell style={{ fontWeight: 'bold' }} >
+          {key_data.replaceAll("_", " ")}
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
 
           <Collapse in={mainopen} timeout="auto" unmountOnExit>
+            <Box
+              m={1}
+              //margin
+              display="flex"
+              justifyContent="flex-end"
+              alignItems="flex-end"
 
+            >
+              <Button startIcon={<AddIcon />} variant="contained" color="primary" sx={{ height: 40 }}>
+                Add Policy
+              </Button>
+            </Box>
             <CollapsibleTable rows={props.rows} cols={props.cols} />
 
           </Collapse>
@@ -71,29 +85,50 @@ export default function PolicyGroupTable(props: { rows: any[]; cols: any[]; }) {
     setPage(0);
   };
   return (
-    <TableContainer component={Paper}>
+    <Box>
+       <Box
+      m={1}
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+    <Button startIcon={<SaveIcon />} variant="contained" color="primary" sx={{ height: 40,margin:1, }}>
+        Save
+      </Button>
+      <Button startIcon={<AddIcon />} variant="contained" color="secondary" sx={{ height: 40,margin:1,alignSelf:'flex-end' }}>
+        Add Policy Group
+      </Button>
+    </Box>
+     
+     
 
-      <Table >
+  
+  
+   
+      <TableContainer component={Paper}>
 
-        <TableBody>
+        <Table >
 
-          {
+          <TableBody>
 
-            Object.keys(props.rows).map((key: any, index) => {
+            {
 
-              return (
+              Object.keys(props.rows).map((key: any, index) => {
 
-                <Row key_data={key} rows={props.rows[key]} cols={props.cols}></Row>
+                return (
 
-              )
-            })
+                  <Row key_data={key} rows={props.rows[key]} cols={props.cols}></Row>
 
-          }
-        </TableBody>
+                )
+              })
 
-      </Table>
+            }
+          </TableBody>
 
-    </TableContainer>
+        </Table>
+
+      </TableContainer>
+    </Box>
   );
 }
 function setMainOpen(arg0: boolean): void {

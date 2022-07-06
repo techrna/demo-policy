@@ -3,24 +3,28 @@ import './App.css';
 import TopAppBar from './components/AppBar';
 import CollapsibleTable from './components/PolicyTable';
 import PolicyDataGrid from './components/PolicyDataGrid';
-import { getPolicyData,cols } from './services/policy_data';
+import { cols, getPolicyGroupData } from './services/policy_data';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList'; 
 import TabPanel from '@mui/lab/TabPanel';
 import PolicyGroupTable from './components/PolicyGroupTable';
+import TreeDataSimple from './components/TreeData';
 function App() {
   
-  const [rows, setRows] = React.useState([]);
+const [rows, setRows] = React.useState([]);
 const [isLoading, setLoading] = React.useState(true);
 
 React.useEffect(() => {
-  getPolicyData().then((data)=>{
+  getPolicyGroupData().then((data)=>{
     setRows(data.data)
     setLoading(false)
   })
 }, []);
+
+
+
 const [value, setValue] = React.useState('1');
 
 const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -36,6 +40,8 @@ const groupRows=(rowsData:any)=>{
 
   return groupData;
 }
+
+
   return (
     <div className="App">
      
@@ -53,6 +59,7 @@ const groupRows=(rowsData:any)=>{
                     <Tab label="DataGrid" value="1" />
                     <Tab label="React Table" value="2" />
                     <Tab label="Grouping" value="3" />
+                    <Tab label="Tree" value="4" />
                   </TabList>
                 </Box>
                 <TabPanel value="1"><PolicyDataGrid rows={rows} cols={cols} />
@@ -64,6 +71,9 @@ const groupRows=(rowsData:any)=>{
 
 
 
+                </TabPanel>
+                <TabPanel value="4">
+                <TreeDataSimple  rows={rows} cols={cols}/>
                 </TabPanel>
               </TabContext>
      

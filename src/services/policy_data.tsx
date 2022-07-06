@@ -68,5 +68,9 @@ const client = axios.create({
 });
 
 export const getPolicyData = ():Promise<any> => {
-  return client.get("/policy")
-}
+    return client.get("/policy")
+  }
+
+export const getPolicyGroupData = ():Promise<any> => {
+    return client.get("/policy/grouped")
+  }

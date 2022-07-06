@@ -12,8 +12,9 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { TablePagination } from '@mui/material';
-
+import { Button, TablePagination } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 const skip_header=["rule","description","remediation recipe","value","operator"]
 
 function Row(props: { row:any }) {
@@ -22,7 +23,7 @@ function Row(props: { row:any }) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} >
         <TableCell >
           <IconButton
             aria-label="expand row"
@@ -31,6 +32,12 @@ function Row(props: { row:any }) {
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
+          <IconButton   color="primary" sx={{ height: 40 }}>
+          <EditIcon />
+              </IconButton >
+              <IconButton  color="primary" sx={{ height: 40 }}>
+              <DeleteIcon />
+              </IconButton >
         </TableCell>
         <TableCell >
           {row.policy_name.replaceAll("_",' ').toLowerCase()}
@@ -39,6 +46,7 @@ function Row(props: { row:any }) {
         <TableCell >{row.cis_id}</TableCell>
         <TableCell >{row.cis_level}</TableCell>
         <TableCell >{row.severity}</TableCell>
+  
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
