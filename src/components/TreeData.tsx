@@ -5,111 +5,11 @@ import {
   GridRowsProp,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-import { FormControlLabel, FormGroup, Switch } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Box, FormControlLabel, FormGroup, Switch } from '@mui/material';
+import { DataGrid, GridRowParams } from '@mui/x-data-grid';
 
-const rows: GridRowsProp = [
-  {
-    hierarchy: ['Sarah'],
-    jobTitle: 'Head of Human Resources',
-    recruitmentDate: new Date(2020, 8, 12),
-    id: 0,
-  },
-  {
-    hierarchy: ['Thomas'],
-    jobTitle: 'Head of Sales',
-    recruitmentDate: new Date(2017, 3, 4),
-    id: 1,
-  },
-  {
-    hierarchy: ['Thomas', 'Robert'],
-    jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2020, 11, 20),
-    id: 2,
-  },
-  {
-    hierarchy: ['Thomas', 'Karen'],
-    jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2020, 10, 14),
-    id: 3,
-  },
-  {
-    hierarchy: ['Thomas', 'Nancy'],
-    jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2017, 10, 29),
-    id: 4,
-  },
-  {
-    hierarchy: ['Thomas', 'Daniel'],
-    jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2020, 7, 21),
-    id: 5,
-  },
-  {
-    hierarchy: ['Thomas', 'Christopher'],
-    jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2020, 7, 20),
-    id: 6,
-  },
-  {
-    hierarchy: ['Thomas', 'Donald'],
-    jobTitle: 'Sales Person',
-    recruitmentDate: new Date(2019, 6, 28),
-    id: 7,
-  },
-  {
-    hierarchy: ['Mary'],
-    jobTitle: 'Head of Engineering',
-    recruitmentDate: new Date(2016, 3, 14),
-    id: 8,
-  },
-  {
-    hierarchy: ['Mary', 'Jennifer'],
-    jobTitle: 'Tech lead front',
-    recruitmentDate: new Date(2016, 5, 17),
-    id: 9,
-  },
-  {
-    hierarchy: ['Mary', 'Jennifer', 'Anna'],
-    jobTitle: 'Front-end developer',
-    recruitmentDate: new Date(2019, 11, 7),
-    id: 10,
-  },
-  {
-    hierarchy: ['Mary', 'Michael'],
-    jobTitle: 'Tech lead devops',
-    recruitmentDate: new Date(2021, 7, 1),
-    id: 11,
-  },
-  {
-    hierarchy: ['Mary', 'Linda'],
-    jobTitle: 'Tech lead back',
-    recruitmentDate: new Date(2017, 0, 12),
-    id: 12,
-  },
-  {
-    hierarchy: ['Mary', 'Linda', 'Elizabeth'],
-    jobTitle: 'Back-end developer',
-    recruitmentDate: new Date(2019, 2, 22),
-    id: 13,
-  },
-  {
-    hierarchy: ['Mary', 'Linda', 'William'],
-    jobTitle: 'Back-end developer',
-    recruitmentDate: new Date(2018, 4, 19),
-    id: 14,
-  },
-];
 
-const columns: GridColumns = [
-  { field: 'jobTitle', headerName: 'Job Title', width: 200 },
-  {
-    field: 'recruitmentDate',
-    headerName: 'Recruitment Date',
-    type: 'date',
-    width: 150,
-  },
-];
+
 
 const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.groupings;
 export  function SwitchLabels(props: { checked: boolean | undefined; handleChange: ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined; }) {
@@ -130,23 +30,45 @@ export default function TreeDataSimple(props: {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setChecked(event.target.checked);
     };
-
+    const getDetailPanelContent = React.useCallback(
+        ({ row }: GridRowParams) =>
+          row._id ? <Box sx={{ p: 2,textAlign:"left" }}>
+            <div><b>Rule :</b><span style={{  }}>{`${row.rule}`}</span></div>
+            <div><b>Value :</b><span style={{  }}>{`${row.value}`}</span></div>
+            <div><b>Description :</b><span style={{  }}>{`${row.description}`}</span></div>
+            <div><b>Remediation Recipe :</b><span style={{  }}>{`${row.remediation_recipe}`}</span></div>
+            </Box> : null,
+        [],
+      );
+    
+      const getDetailPanelHeight = React.useCallback(() => 150, []);
   return (
     <div style={{ height: 400, width: '100%' }}>
           <SwitchLabels checked={checked} handleChange={handleChange} />
         {
-            checked?
+           
                 <DataGridPro
-                treeData
+                {...(checked && { treeData:true })}
                 rows={props.rows}
                 columns={props.cols}
                 getRowId={(r) => r._id}
                 getTreeDataPath={getTreeDataPath}
-              />:
-                <DataGrid
-                rows={props.rows}
-                columns={props.cols}
-                getRowId={(r) => r._id}
+                rowThreshold={0}
+                getDetailPanelContent={getDetailPanelContent}
+                getDetailPanelHeight={getDetailPanelHeight}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {
+                      // Hide columns status and traderName, the other columns will remain visible
+                      remediation_recipe: false,
+                      rule: false,
+                      operator: false,
+                      value: false,
+                      description: false,
+                    },
+                  },
+                }}
+                
               />
 
             
