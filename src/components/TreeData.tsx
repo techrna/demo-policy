@@ -11,8 +11,7 @@ import { DataGrid, GridRowParams } from '@mui/x-data-grid';
 
 
 
-const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.groupings;
-export  function SwitchLabels(props: { checked: boolean | undefined; handleChange: ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined; }) {
+export  function SwitchView(props: { checked: boolean | undefined; handleChange: ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined; }) {
     
     return (
       <FormGroup>
@@ -21,14 +20,27 @@ export  function SwitchLabels(props: { checked: boolean | undefined; handleChang
       </FormGroup>
     );
   }
+export  function SwitchData(props: { checked: boolean | undefined; handleChange: ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined; }) {
+    
+    return (
+      <FormGroup>
+        <FormControlLabel control={<Switch  checked={props.checked}
+      onChange={props.handleChange} />} label="Reverse Tree" />
+      </FormGroup>
+    );
+  }
 
 export default function TreeDataSimple(props: {
     cols: GridColumns<any>; rows: readonly any[]; 
 }) {
     const [checked, setChecked] = React.useState(false);
+    const [rev_checked, setrevChecked] = React.useState(true);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setChecked(event.target.checked);
+    };
+    const handlerevChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setrevChecked(event.target.checked);
     };
     const getDetailPanelContent = React.useCallback(
         ({ row }: GridRowParams) =>
@@ -42,9 +54,13 @@ export default function TreeDataSimple(props: {
       );
     
       const getDetailPanelHeight = React.useCallback(() => 150, []);
+
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = !rev_checked?(row) => row.groupings:(row) => row.reverseGrp;
+    
   return (
     <div style={{ height: 400, width: '100%' }}>
-          <SwitchLabels checked={checked} handleChange={handleChange} />
+          <SwitchView checked={checked} handleChange={handleChange} />
+          {checked && <SwitchData checked={rev_checked} handleChange={handlerevChange} />}  
         {
            
                 <DataGridPro

@@ -11,14 +11,23 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import PolicyGroupTable from './components/PolicyGroupTable';
 import TreeDataSimple from './components/TreeData';
+import map from "lodash/map";
+import assign from "lodash/assign";
+
 function App() {
   
-const [rows, setRows] = React.useState([]);
+const [rows, setRows] = React.useState<any >([]);
 const [isLoading, setLoading] = React.useState(true);
 
 React.useEffect(() => {
   getPolicyGroupData().then((data)=>{
-    setRows(data.data)
+
+    const groupedData=map(data.data , function(policy) { 
+      return assign({}, policy, {reverseGrp: [policy.severity,policy.cis_level,policy.policy_group,policy.cis_id,policy._id]});
+ });
+
+    console.log(groupedData)
+    setRows(groupedData)
     setLoading(false)
   })
 }, []);
